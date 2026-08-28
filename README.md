@@ -8,13 +8,13 @@ Sebuah CLI berbasis Batch Script yang mengotomatisasi 13+ perintah troubleshooti
 
 ---
 
-## Latar Belakang
+## 📌 Latar Belakang
 
 Sebagai bagian dari persiapan karier di bidang **IT Support**, saya sering menjumpai skenario di mana user melaporkan masalah koneksi internet/jaringan yang solusinya berulang: cek IP, flush DNS, release/renew IP, reset TCP/IP stack, dan sebagainya.
 
 Alih-alih mengetik perintah CMD satu per satu setiap kali menangani tiket, saya membangun **Network Toolkit**: sebuah menu interaktif yang menjalankan perintah-perintah tersebut hanya dengan menekan satu tombol. Tujuannya adalah mempercepat *first-level troubleshooting* dan mengurangi human error saat mengetik perintah di bawah tekanan (misalnya saat remote-assist user yang panik).
 
-## Fitur
+## ✨ Fitur
 
 | No | Fitur | Perintah Windows yang Dijalankan | Kegunaan di Dunia Nyata |
 |----|-------|-----------------------------------|--------------------------|
@@ -32,37 +32,60 @@ Alih-alih mengetik perintah CMD satu per satu setiap kali menangani tiket, saya 
 | 12 | Speed Test Ping | `ping 8.8.8.8 -t` | Memantau latency & packet loss secara real-time |
 | 13 | Restart Explorer | `taskkill /f /im explorer.exe` + `start explorer.exe` | Memperbaiki taskbar/File Explorer yang freeze tanpa perlu restart PC |
 
-## Tech Stack
+## 🧰 Tech Stack
 
 - **Windows Batch Scripting (.bat)** — dipilih karena native berjalan di semua PC Windows tanpa instalasi dependency tambahan, cocok untuk lingkungan enterprise/klien yang sering membatasi instalasi software pihak ketiga.
 - **Windows CLI Utilities** — `ipconfig`, `netsh`, `ping`, `taskkill`
 
-## Skill yang Didemonstrasikan
+## 🎯 Skill yang Didemonstrasikan
 
 - Pemahaman **dasar jaringan komputer**: IP addressing, DNS, DHCP, TCP/IP stack, Winsock
 - Kemampuan **troubleshooting sistematis** (urutan menu dari diagnosa → tindakan perbaikan → verifikasi)
 - **Automation & scripting** untuk efisiensi kerja IT Support (mengubah SOP manual menjadi tool siap pakai)
 - Pemahaman terhadap **kebutuhan end-user/helpdesk**: tool dirancang agar bisa dipakai teknisi junior tanpa harus hafal syntax CMD
 
-## Cara Menjalankan
+## 🚀 Cara Menjalankan
 
 1. Download atau clone repository ini
 2. Jalankan `network-toolkit.bat` dengan cara double click (disarankan **Run as Administrator** agar perintah seperti `netsh winsock reset` dan `netsh int ip reset` berjalan sempurna)
 3. Pilih nomor menu sesuai kebutuhan, lalu tekan Enter
 4. Tool akan kembali ke menu utama setelah setiap perintah selesai dijalankan
 
->  **Catatan:** Beberapa perintah (reset Winsock, reset TCP/IP stack, release/renew IP) memerlukan hak akses Administrator dan disarankan **restart PC** setelah dijalankan agar perubahan diterapkan penuh.
+> ⚠️ **Catatan:** Beberapa perintah (reset Winsock, reset TCP/IP stack, release/renew IP) memerlukan hak akses Administrator dan disarankan **restart PC** setelah dijalankan agar perubahan diterapkan penuh.
 
-##  Demo
+## 🖼️ Demo
 
-<img width="1109" height="583" alt="image" src="https://github.com/user-attachments/assets/2fc9d0b0-5d8c-4970-8b7f-8a3f75d5b835" />
+*(Tempelkan screenshot tampilan menu di sini, atau GIF singkat saat memilih salah satu opsi. Lihat bagian "Cara Membuat Screenshot/Demo" di panduan portofolio.)*
+
+```
+=========================================================================
+                           Network Toolkit
+=========================================================================
+
+1. Show Full IP Configuration
+2. Ping Google
+3. Flush DNS Cache
+...
+```
+
+## 🆕 Changelog — v2.0
+
+Versi kedua menambahkan tiga peningkatan utama di atas versi awal:
+
+- **Logging otomatis** — setiap perintah (opsi 1–7) kini menyimpan outputnya ke `logs/log_<timestamp>.txt`, memudahkan dokumentasi saat menangani tiket helpdesk.
+- **Validasi input & error handling** — input di luar 1–15 akan menampilkan pesan error, bukan diabaikan begitu saja; perintah yang butuh hak akses Administrator (opsi 4–7) dicek dulu sebelum dijalankan; perintah berisiko (reset Winsock/TCP-IP, opsi 6–7) meminta konfirmasi eksplisit sebelum dieksekusi.
+- **Auto-Diagnostic Mode (opsi 14, BARU)** — menjalankan 3 pengecekan berurutan (konektivitas internet IP-level → resolusi DNS, dengan flush DNS otomatis jika gagal → konektivitas ke default gateway), lalu memberi kesimpulan kemungkinan penyebab masalah dan menyimpan laporan lengkap ke `logs/diagnostic_<timestamp>.txt`.
+
+> File script v2.0 ada di `network-toolkit-v2.bat`. Script asli (v1.0) tetap disertakan di `network-toolkit.bat` sebagai referensi/riwayat perkembangan proyek — bagus untuk ditunjukkan di case study sebagai bukti progres.
+
+> ⚠️ **Catatan pengujian:** Script v2.0 memakai `wmic` untuk timestamp log (locale-independent) — `wmic` sudah deprecated di Windows 11 versi terbaru meski umumnya masih terpasang. Sebelum dipakai di mesin produksi/dilampirkan ke portofolio, jalankan dan uji tiap opsi menu (terutama opsi 14) di lingkungan Windows nyata, dan sesuaikan bila ada perbedaan hasil.
 
 ## 🔭 Rencana Pengembangan Selanjutnya
 
-- [ ] Menambahkan logging otomatis (menyimpan hasil setiap perintah ke file `.txt` bertanggal, untuk dokumentasi tiket)
-- [ ] Menambahkan validasi input (mencegah error jika user memasukkan huruf/angka di luar menu)
-- [ ] Menambahkan opsi export hasil `ipconfig /all` ke file untuk dilampirkan ke laporan
-- [ ] Port ke PowerShell untuk fitur yang lebih advanced (misalnya cek status adapter otomatis)
+- [ ] Menambahkan opsi export hasil `ipconfig /all` ke format laporan HTML yang lebih rapi
+- [ ] Port ke PowerShell untuk fitur yang lebih advanced (misalnya cek status adapter otomatis via `Get-NetAdapter`)
+- [ ] Ganti `wmic` dengan `powershell Get-Date` sebagai fallback timestamp bila `wmic` tidak tersedia
+- [ ] Versi GUI sederhana (Python/Tkinter)
 
 ## 👤 Tentang Proyek Ini
 

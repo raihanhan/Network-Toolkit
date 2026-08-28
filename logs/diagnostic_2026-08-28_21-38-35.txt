@@ -1,0 +1,7 @@
+Network Toolkit - Auto Diagnostic Report
+Tanggal/Waktu: 28/08/2026 21:38:35,18
+
+[1/3] Internet (IP-level): OK
+[2/3] DNS Resolution: OK
+[3/3] Gateway (192.168.1.1): OK
+Kesimpulan: Semua pengecekan OK
