@@ -55,11 +55,7 @@ Alih-alih mengetik perintah CMD satu per satu setiap kali menangani tiket, saya 
 
 ##  Demo
 
-
-```
 <img width="1109" height="583" alt="image" src="https://github.com/user-attachments/assets/2fc9d0b0-5d8c-4970-8b7f-8a3f75d5b835" />
-
-```
 
 ## 🔭 Rencana Pengembangan Selanjutnya
 
