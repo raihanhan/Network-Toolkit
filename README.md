@@ -1,6 +1,6 @@
 ## Windows Diagnostics Toolkit
 
-A single menu-driven PowerShell script for diagnosing and fixing common Windows issues. Instead of separate scripts per problem domain, everything lives in one file with a category-based menu — pick a category, then pick an action.
+A single menu-driven PowerShell script for diagnosing and fixing common Windows issues. Instead of separate scripts per problem domain, everything lives in one file with a category-based menu pick a category, then pick an action.
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
 ![Language](https://img.shields.io/badge/language-PowerShell-blue)
@@ -62,7 +62,7 @@ Instead of typing CMD commands one by one every time I handle a ticket, I built 
 ## Usage
 
 1. Right-click Windows Diagnostic Toolkit.ps1 → Run with PowerShell
-Note: PowerShell scripts don't execute on double-click by design (a Windows security measure) — they'll open in a text editor instead unless launched this way.
+Note: PowerShell scripts don't execute on double-click by design (a Windows security measure), they'll open in a text editor instead unless launched this way.
 2. For full functionality, run it from an elevated session: open PowerShell as Administrator first, then run .\Windows Diagnostic Toolkit.ps1
 3. If blocked by execution policy, run once in an elevated PowerShell:
 
