@@ -1,83 +1,98 @@
-# 🛠️ Network Toolkit — Windows Network Troubleshooting Automation
+## Windows Diagnostics Toolkit
 
-Sebuah CLI berbasis Batch Script yang mengotomatisasi 13+ perintah troubleshooting jaringan Windows yang paling sering digunakan oleh IT Support, sehingga proses diagnosa dan perbaikan koneksi jaringan pengguna menjadi lebih cepat, konsisten, dan tidak perlu mengetik ulang perintah CMD satu per satu.
+A single menu-driven PowerShell script for diagnosing and fixing common Windows issues. Instead of separate scripts per problem domain, everything lives in one file with a category-based menu — pick a category, then pick an action.
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
-![Language](https://img.shields.io/badge/language-Batch%20Script-lightgrey)
+![Language](https://img.shields.io/badge/language-PowerShell-blue)
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 
 ---
 
-## Latar Belakang
+## Background
 
-Sebagai bagian dari persiapan karier di bidang **IT Support**, saya sering menjumpai skenario di mana user melaporkan masalah koneksi internet/jaringan yang solusinya berulang: cek IP, flush DNS, release/renew IP, reset TCP/IP stack, dan sebagainya.
+As part of my career preparation in the field of **IT Support**, I often encounter situations where users report issues such as network, hardware, and system operation problems on their Windows devices.
 
-Alih-alih mengetik perintah CMD satu per satu setiap kali menangani tiket, saya membangun **Network Toolkit**: sebuah menu interaktif yang menjalankan perintah-perintah tersebut hanya dengan menekan satu tombol. Tujuannya adalah mempercepat *first-level troubleshooting* dan mengurangi human error saat mengetik perintah di bawah tekanan (misalnya saat remote-assist user yang panik).
+Instead of typing CMD commands one by one every time I handle a ticket, I built the **Windows Diagnostic Toolkit**: an interactive menu that runs those commands with the press of a single button. The goal is to speed up *first-level troubleshooting* and reduce human error when typing commands under pressure (for example, while remotely assisting a panicked user).
 
-## Fitur
+## Features
 
-| No | Fitur | Perintah Windows yang Dijalankan | Kegunaan di Dunia Nyata |
-|----|-------|-----------------------------------|--------------------------|
-| 1 | Show Full IP Configuration | `ipconfig /all` | Melihat IP, subnet, gateway, DNS, MAC address untuk diagnosa awal |
-| 2 | Ping Google | `ping google.com` | Uji cepat konektivitas internet & DNS resolution |
-| 3 | Flush DNS Cache | `ipconfig /flushdns` | Mengatasi masalah "website tidak bisa diakses" akibat cache DNS lama |
-| 4 | Release IP Address | `ipconfig /release` | Melepas IP address yang bermasalah (biasanya sebelum renew) |
-| 5 | Renew IP Address | `ipconfig /renew` | Meminta IP baru dari DHCP server |
-| 6 | Reset Winsock | `netsh winsock reset` | Memperbaiki koneksi internet yang rusak akibat corrupt Winsock catalog |
-| 7 | Reset TCP/IP Stack | `netsh int ip reset` | Mengembalikan konfigurasi TCP/IP ke default saat terjadi error jaringan kompleks |
-| 8 | Open Network Connections | `ncpa.cpl` | Akses cepat ke adapter jaringan untuk cek status/enable-disable |
-| 9 | Open WiFi Settings | `ms-settings:network-wifi` | Akses cepat pengaturan WiFi tanpa navigasi manual |
-| 10 | Open Device Manager | `devmgmt.msc` | Cek driver adapter jaringan yang bermasalah |
-| 11 | Open Network Troubleshooter | `ms-settings:troubleshoot` | Menjalankan built-in troubleshooter Windows |
-| 12 | Speed Test Ping | `ping 8.8.8.8 -t` | Memantau latency & packet loss secara real-time |
-| 13 | Restart Explorer | `taskkill /f /im explorer.exe` + `start explorer.exe` | Memperbaiki taskbar/File Explorer yang freeze tanpa perlu restart PC |
+| Category| Covers | 
+|----|-------|
+| Network Toolkit | 	IP config, DNS, adapter resets, connectivity auto-diagnosis |
+| System Integrity Toolkit | 	SFC, DISM, CHKDSK, reliability history |
+| Hardware Toolkit | 	CPU, RAM, storage health, hardware-related event errors |
 
-## Tech Stack
+## 📡 Network Toolkit
 
-- **Windows Batch Scripting (.bat)** — dipilih karena native berjalan di semua PC Windows tanpa instalasi dependency tambahan, cocok untuk lingkungan enterprise/klien yang sering membatasi instalasi software pihak ketiga.
-- **Windows CLI Utilities** — `ipconfig`, `netsh`, `ping`, `taskkill`
+- Show full IP configuration (ipconfig /all)
+  Ping test, DNS flush
+- Release / renew IP address
+- Reset Winsock / TCP-IP stack (with a y/n confirmation before either)
+- Quick shortcuts to Network Connections, Wi-Fi settings, Device Manager, and the built-in Network Troubleshooter
+- Continuous ping speed test
+- Restart Windows Explorer
+- Auto-Diagnostic Mode — runs a 3-step check (internet reachability → DNS resolution → default gateway) and prints a likely root cause with a suggested next step
+- Every run is logged to a timestamped file under logs/
 
-## Skill yang Didemonstrasikan
+## 🛠️ System Integrity Toolkit
 
-- Pemahaman **dasar jaringan komputer**: IP addressing, DNS, DHCP, TCP/IP stack, Winsock
-- Kemampuan **troubleshooting sistematis** (urutan menu dari diagnosa → tindakan perbaikan → verifikasi)
-- **Automation & scripting** untuk efisiensi kerja IT Support (mengubah SOP manual menjadi tool siap pakai)
-- Pemahaman terhadap **kebutuhan end-user/helpdesk**: tool dirancang agar bisa dipakai teknisi junior tanpa harus hafal syntax CMD
+- SFC — Scan Now (check + repair) or Verify Only
+- DISM — Check Health (quick), Scan Health (deep), Restore Health (repairs the component store SFC relies on)
+- Full Repair Sequence — runs DISM RestoreHealth then SFC Scannow back-to-back, the standard fix order when SFC alone can't repair something
+- CHKDSK — schedules a disk check on the next restart
+- View the last 50 lines of CBS.log (the detailed log SFC writes its results to)
+- Open Reliability History (perfmon /rel) — a timeline of crashes, errors, and system changes, useful for spotting patterns over time
 
-## Cara Menjalankan
+## 💻 Hardware Toolkit
 
-1. Download atau clone repository ini
-2. Jalankan `network-toolkit.bat` dengan cara double click (disarankan **Run as Administrator** agar perintah seperti `netsh winsock reset` dan `netsh int ip reset` berjalan sempurna)
-3. Pilih nomor menu sesuai kebutuhan, lalu tekan Enter
-4. Tool akan kembali ke menu utama setelah setiap perintah selesai dijalankan
+- CPU — core count, clock speed, status, and a 5-second live usage sample
+- RAM — total/used/free memory, per-module details (slot, capacity, speed, manufacturer), and top 5 memory-consuming processes
+- Storage — S.M.A.R.T. health status via Get-PhysicalDisk, reliability counters (wear, temperature, read/write errors), with a fallback to basic WMI disk status where those cmdlets aren't available
+- Disk space summary per drive
+- Hardware-related Event Log errors from the last 7 days (filtered to disk/storage/CPU/memory/WHEA providers)
+- Full System Report — runs all of the above in sequence
+- Export report to file — saves a full report as a timestamped .txt
 
-> ⚠️ **Catatan:** Beberapa perintah (reset Winsock, reset TCP/IP stack, release/renew IP) memerlukan hak akses Administrator dan disarankan **restart PC** setelah dijalankan agar perubahan diterapkan penuh.
+## Requirements
+
+- Windows 10/11
+- PowerShell 5.1+ 
+- Administrator privileges for most System Integrity options and some Network options (adapter resets, release/renew). The script checks elevation on launch and warns per-feature instead of blocking the whole menu.
+
+## Usage
+
+1. Right-click Windows Diagnostic Toolkit.ps1 → Run with PowerShell
+Note: PowerShell scripts don't execute on double-click by design (a Windows security measure) — they'll open in a text editor instead unless launched this way.
+2. For full functionality, run it from an elevated session: open PowerShell as Administrator first, then run .\Windows Diagnostic Toolkit.ps1
+3. If blocked by execution policy, run once in an elevated PowerShell:
+
+```shell
+   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+4. Pick a category (1–3) from the main menu, then an action from that category's submenu. 0 steps back up a level.
+5. Logs and exported reports are saved automatically to the logs/ folder next to the script.
 
 ## Demo
 
-<img width="1102" height="585" alt="image" src="https://github.com/user-attachments/assets/b7e48c7e-8664-4c56-9b6c-aa481437f9e1" />
+<img width="1092" height="282" alt="image" src="https://github.com/user-attachments/assets/42c3019a-663d-4170-a91a-387d34b6a261" />
 
-## Changelog — v2.0
+---
 
-Versi kedua menambahkan tiga peningkatan utama di atas versi awal:
+<img width="1097" height="458" alt="image" src="https://github.com/user-attachments/assets/dfc0c05c-b492-4bcb-b596-1ba0c2df99a5" />
 
-- **Logging otomatis** — setiap perintah (opsi 1–7) kini menyimpan outputnya ke `logs/log_<timestamp>.txt`, memudahkan dokumentasi saat menangani tiket helpdesk.
-- **Validasi input & error handling** — input di luar 1–15 akan menampilkan pesan error, bukan diabaikan begitu saja; perintah yang butuh hak akses Administrator (opsi 4–7) dicek dulu sebelum dijalankan; perintah berisiko (reset Winsock/TCP-IP, opsi 6–7) meminta konfirmasi eksplisit sebelum dieksekusi.
-- **Auto-Diagnostic Mode (opsi 14, BARU)** — menjalankan 3 pengecekan berurutan (konektivitas internet IP-level → resolusi DNS, dengan flush DNS otomatis jika gagal → konektivitas ke default gateway), lalu memberi kesimpulan kemungkinan penyebab masalah dan menyimpan laporan lengkap ke `logs/diagnostic_<timestamp>.txt`.
+---
 
-> File script v2.0 ada di `network-toolkit-v2.bat`. Script asli (v1.0) tetap disertakan di `network-toolkit.bat` sebagai referensi/riwayat perkembangan proyek — bagus untuk ditunjukkan di case study sebagai bukti progres.
+<img width="1107" height="565" alt="image" src="https://github.com/user-attachments/assets/fac66296-0f5a-4675-a6ac-95bd5573e34d" />
 
-> ⚠️ **Catatan pengujian:** Script v2.0 memakai `wmic` untuk timestamp log (locale-independent) — `wmic` sudah deprecated di Windows 11 versi terbaru meski umumnya masih terpasang. Sebelum dipakai di mesin produksi/dilampirkan ke portofolio, jalankan dan uji tiap opsi menu (terutama opsi 14) di lingkungan Windows nyata, dan sesuaikan bila ada perbedaan hasil.
+---
 
-## Rencana Pengembangan Selanjutnya
+<img width="1097" height="404" alt="image" src="https://github.com/user-attachments/assets/0a7be65f-0ee9-4314-a9c2-8c3268c1439a" />
 
-- [ ] Menambahkan opsi export hasil `ipconfig /all` ke format laporan HTML yang lebih rapi
-- [ ] Port ke PowerShell untuk fitur yang lebih advanced (misalnya cek status adapter otomatis via `Get-NetAdapter`)
-- [ ] Ganti `wmic` dengan `powershell Get-Date` sebagai fallback timestamp bila `wmic` tidak tersedia
-- [ ] Versi GUI sederhana (Python/Tkinter)
+---
 
-## Tentang Proyek Ini
+## About This Project
 
-Dibuat sebagai bagian dari portofolio dalam persiapan memulai karier di bidang **IT Support**, untuk mendemonstrasikan pemahaman troubleshooting jaringan dasar sekaligus kemampuan membangun tool otomatisasi yang benar-benar bisa dipakai di pekerjaan sehari-hari.
+Created as part of a portfolio to prepare for a career in **IT Support**, this project demonstrates an understanding of basic network troubleshooting as well as the ability to build automation tools that are truly usable in day-to-day work.
 
 ---
