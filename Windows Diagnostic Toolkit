@@ -1,24 +1,3 @@
-<#
-    ALL-IN-ONE WINDOWS TROUBLESHOOTING TOOLKIT
-    -------------------------------------------
-    Combines three toolkits into one menu-driven PowerShell script:
-      1. Network Toolkit           - connectivity diagnostics & fixes
-      2. System Integrity Toolkit  - SFC / DISM / CHKDSK
-      3. Hardware Toolkit          - CPU / RAM / Storage health
-
-    Usage:
-      1. Right-click -> "Run with PowerShell"
-         (PowerShell scripts don't execute on double-click by design;
-          they'll open in a text editor unless launched this way)
-      2. If blocked by execution policy, run once in an elevated PowerShell:
-         Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-      3. For full functionality (SFC/DISM/CHKDSK/adapter resets), launch
-         PowerShell as Administrator first, then run: .\AllInOneToolkit.ps1
-
-    Author: (your name here)
-#>
-
-# ---------- Setup ----------
 if (-not (Test-Path ".\logs")) { New-Item -ItemType Directory -Path ".\logs" | Out-Null }
 
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
