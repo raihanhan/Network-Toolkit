@@ -360,7 +360,7 @@ function Invoke-HardwareMenu {
 function Show-MainMenu {
     Clear-Host
     Write-Host "=========================================================="
-    Write-Host "        ALL-IN-ONE WINDOWS TROUBLESHOOTING TOOLKIT"
+    Write-Host "        WINDOWS TROUBLESHOOTING TOOLKIT"
     Write-Host "=========================================================="
     if (-not $isAdmin) {
         Write-Host "[!] Running WITHOUT Administrator privileges." -ForegroundColor Yellow
